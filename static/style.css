@@ -31,17 +31,21 @@ main {
 }
 
 #chat-output {
-    height: 500px; /* Increased from 400px */
-    overflow-y: scroll;
+    min-height: 500px; /* Set a min-height with overflow to allow scrolling */
+    overflow-y: auto; /* Allows scrolling when content overflows */
     border-bottom: 1px solid #ddd;
     padding: 10px;
+    max-height: 700px;
     background: #f9f9f9;
 }
 
+/* Increase padding and possibly font size to ensure readability */
 .user-message, .bot-message {
     margin: 5px;
-    padding: 10px;
+    padding: 10px 15px; /* Increased padding */
     border-radius: 4px;
+    font-size: 16px; /* Increased font size for better readability */
+    word-wrap: break-word;
 }
 
 .user-message {
@@ -54,11 +58,10 @@ main {
     text-align: left;
 }
 
+/* Ensure input box and button are appropriately sized for longer inputs */
 input[type="text"] {
     padding: 10px;
-    width: 70%; /* Adjusted to better fit the increased size of the chat container */
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    width: 60%; /* Adjusted for balance */
     margin-right: 10px;
 }
 

@@ -55,8 +55,11 @@
 
         function updateChat(message, sender) {
             let msgClass = sender === 'user' ? 'user-message' : 'bot-message';
-            $('#chat-output').append(`<div class="${msgClass}">${message}</div>`);
+            let messageDiv = `<div class="${msgClass}">${message}</div>`;
+            $('#chat-output').append(messageDiv);
+            $('#chat-output').scrollTop($('#chat-output')[0].scrollHeight); // Auto-scroll to the bottom
         }
+        
 
         function displayChart(data) {
             $('#resultChart').show();
