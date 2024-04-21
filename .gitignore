@@ -1,0 +1,4 @@
+.env
+.DS_Store
+.git
+BioMistral-7B.Q4_K_M.gguf

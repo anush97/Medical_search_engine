@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Drug Search Tool</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Medical Drugs and News Search Tool</h1>
+        </header>
+        <main>
+            <div class="chat-container">
+                <div id="chat-output"></div>
+                <div id="loading" style="display:none;">Loading...</div>
+                <canvas id="resultChart" width="400" height="400" style="display:none;"></canvas>
+                <form id="searchForm" onsubmit="submitQuery(); return false;">
+                    <input type="text" id="searchInput" name="query" placeholder="Ask a question about medical drugs..." required>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </main>
+        <footer>
+            <p>&copy; 2024 Medical Search Tool</p>
+        </footer>
+    </div>
+    <script>
+        function submitQuery() {
+            var input = $('#searchInput').val();
+            updateChat(input, 'user');
+            $('#loading').show(); // Show the loading indicator
+            $('#resultChart').hide(); // Hide chart if shown previously
+            $.ajax({
+                type: "POST",
+                url: "/search",
+                data: {query: input},
+                success: function(response) {
+                    $('#loading').hide(); // Hide the loading indicator
+                    updateChat(`Summary: ${response.summary}`, 'bot');
+                    if (response.chartData) {
+                        displayChart(response.chartData);
+                    }
+                },
+                error: function() {
+                    $('#loading').hide(); // Hide the loading indicator
+                    updateChat("Sorry, there was a problem processing your query. Please try again.", 'bot');
+                }
+            });
+            $('#searchInput').val(''); // Clear input after sending
+        }
+
+        function updateChat(message, sender) {
+            let msgClass = sender === 'user' ? 'user-message' : 'bot-message';
+            $('#chat-output').append(`<div class="${msgClass}">${message}</div>`);
+        }
+
+        function displayChart(data) {
+            $('#resultChart').show();
+            const ctx = document.getElementById('resultChart').getContext('2d');
+            const resultChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: data.label,
+                        data: data.values,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
